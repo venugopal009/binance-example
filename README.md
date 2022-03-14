@@ -19,12 +19,12 @@ pip3
 sudo yum install -y python3-pip
 
 pip3 install -r requirements.txt
-pandas==1.2.3
-requests==2.22.0
-simplejson==3.16.0
-prometheus-client==0.9.0
+pandas
+requests
+simplejson
+prometheus-client
 
 Usage
 Instruction on how to run the script.
 
-python3 client.py
+python3 binance.py
