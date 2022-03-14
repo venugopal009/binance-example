@@ -1,5 +1,3 @@
-# coding=utf-8
-
 import time
 import requests
 import pandas as pd
@@ -8,10 +6,10 @@ from prometheus_client import start_http_server, Gauge
 
 class BinanceClient:
 
-    API_URL = 'https://api.binance.com/api'
+    API = 'https://api.binance.com/api'
 
     def __init__(self):
-        self.API_URL = self.API_URL
+        self.API = self.API
         self.prom_gauge = Gauge('absolute_delta_value',
                         'Absolute Delta Value of Price Spread', ['symbol'])
 
@@ -20,7 +18,7 @@ class BinanceClient:
         """Test status of Binance API"""
         uri = "/v3/ping"
 
-        r = requests.get(self.API_URL + uri)
+        r = requests.get(self.API + uri)
 
         if r.status_code != 200:
             raise Exception("Binance API is unreachable.")
@@ -29,11 +27,10 @@ class BinanceClient:
         """
         Return the top 5 symbols with quote asset BTC
         and the highest volume over the last 24 hours
-        in descending order in data frames.
         """
         uri = "/v3/ticker/24hr"
 
-        r = requests.get(self.API_URL + uri)
+        r = requests.get(self.API + uri)
         df = pd.DataFrame(r.json())
         df = df[['symbol', field]]
         df = df[df.symbol.str.contains(r'(?!$){}$'.format(asset))]
@@ -65,7 +62,7 @@ class BinanceClient:
 
         for s in symbols['symbol']:
             payload = { 'symbol' : s, 'limit' : 500 }
-            r = requests.get(self.API_URL + uri, params=payload)
+            r = requests.get(self.API + uri, params=payload)
             for col in ["bids", "asks"]:
                 df = pd.DataFrame(data=r.json()[col], columns=["price", "quantity"], dtype=float)
                 df = df.sort_values(by=['price'], ascending=False).head(200)
@@ -98,7 +95,7 @@ class BinanceClient:
 
         for s in symbols['symbol']:
             payload = { 'symbol' : s }
-            r = requests.get(self.API_URL + uri, params=payload)
+            r = requests.get(self.API + uri, params=payload)
             price_spread = r.json()
             spread_list[s] = float(price_spread['askPrice']) - float(price_spread['bidPrice'])
  
