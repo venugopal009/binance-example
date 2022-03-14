@@ -1,3 +1,4 @@
+#modules to be downloaded on the machine
 pandas
 requests
 simplejson
